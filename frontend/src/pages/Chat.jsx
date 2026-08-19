@@ -11,8 +11,8 @@ import MessageComponent from '../components/MessageComponent';
 import FriendsComponent from '../components/FriendsComponent';
 import SearchUser from '../components/SearchUser';
 import Notifiactions from '../components/Notifications';
-const socket = io("http://localhost:4040", { autoConnect: false, withCredentials: "include" });
-// const socket = io("http://192.168.8.198:4040", { autoConnect: false, withCredentials: "include" });
+const socket = io("https://chat-server-70ws.onrender.com", { autoConnect: false, withCredentials: "include" });
+//
 import { DataContext } from '../context/DataContext';
 import VideoCall from '../components/VideoCall';
 let currentUserId;
@@ -74,7 +74,7 @@ export default function Chat() {
             setShowMessageComponent(true);
         }
         const loadData = async () => {
-            const res = await fetch("http://localhost:4040/", {
+            const res = await fetch("https://chat-server-70ws.onrender.com/", {
                 credentials: "include"
             });
             const result = await res.json();
