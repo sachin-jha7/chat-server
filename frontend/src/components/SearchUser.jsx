@@ -17,7 +17,7 @@ export default function SearchUser({ socket, currUserData }) {
     const searchFormHandler = async (data) => {
         const name = { searchedName: data.text };
         if (data.text.trim().length === 0) return;
-        const res = await fetch("http://localhost:4040/search", {
+        const res = await fetch("https://chat-server-70ws.onrender.com/search", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
