@@ -8,7 +8,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://chat-server-70ws.onrender.com",
+        origin: "https://chat-serve.netlify.app",
         credentials: true
     }
 });
@@ -32,7 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.use(cors({
-    origin: "https://chat-server-70ws.onrender.com",
+    origin: "https://chat-serve.netlify.app",
     credentials: true
 }));
 app.use(express.json());
