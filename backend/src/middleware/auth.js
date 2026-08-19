@@ -50,6 +50,7 @@ const signup = async (req, res) => {
         secure: true,
         sameSite: "none",
         partitioned: true,
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -89,6 +90,7 @@ const login = async (req, res) => {
         secure: true,
         sameSite: "none",
         partitioned: true,
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -112,7 +114,16 @@ const verify = (req, res, next) => {
 }
 
 const logout = (req, res) => {
-    return res.clearCookie("token").json("Logged Out successfully");
+    // return res.clearCookie("token").json("Logged Out successfully");
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        partitioned: true,
+        path: "/"
+    });
+
+    res.json("Logged Out successfully");
 }
 
 // const hash = await bcrypt.hash("123456", 10);
