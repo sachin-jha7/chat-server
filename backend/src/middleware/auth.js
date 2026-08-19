@@ -110,7 +110,7 @@ const verify = (req, res, next) => {
 }
 
 const logout = (req, res) => {
-    res.clearCookie("token").json("Logged Out successfully");
+    return res.clearCookie("token").json("Logged Out successfully");
 }
 
 // const hash = await bcrypt.hash("123456", 10);
