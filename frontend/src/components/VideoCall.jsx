@@ -10,7 +10,7 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
     const [callAccepted, setCallAcceped] = useState(false);
 
     // const [payload, setPayload] = useState({});
-    const [facingMode, setFacingMode] = useState("environment");
+    const [facingMode, setFacingMode] = useState("user");
     const pc = useRef(null);
     // const [stream, setStream] = useState(null);
     const streamRef = useRef(null);
@@ -200,10 +200,48 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
         }
     }
 
-    const flipCamera = () => {
-        // console.log("executed")
-        setFacingMode((prevMode) => prevMode == "environment" ? "user" : "environment");
+    // const flipCamera = () => {
+    //     // console.log("executed")
+    //     setFacingMode((prevMode) => prevMode == "environment" ? "user" : "environment");
+    // }
+    const flipCamera = async () => {
+    const newFacingMode =
+        facingMode === "environment" ? "user" : "environment";
+
+    try {
+        const newStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: newFacingMode
+            }
+        });
+
+        const newVideoTrack = newStream.getVideoTracks()[0];
+
+        const sender = pc.current
+            ?.getSenders()
+            .find(sender => sender.track?.kind === "video");
+
+        if (sender) {
+            await sender.replaceTrack(newVideoTrack);
+        }
+
+        const oldVideoTrack = streamRef.current?.getVideoTracks()[0];
+
+        if (oldVideoTrack) {
+            oldVideoTrack.stop();
+        }
+
+        streamRef.current.removeTrack(oldVideoTrack);
+        streamRef.current.addTrack(newVideoTrack);
+
+        callerRef.current.srcObject = streamRef.current;
+
+        setFacingMode(newFacingMode);
+
+    } catch (error) {
+        console.error("Camera flip failed:", error);
     }
+};
 
     const closeMediaStream = () => {
         if (streamRef.current) {
