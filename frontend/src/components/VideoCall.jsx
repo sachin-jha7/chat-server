@@ -43,10 +43,10 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
             // console.log("executed")
             pc.current.onicecandidate = (event) => {
                 if (event.candidate) {
-                    console.log(
-                        "LOCAL ICE CANDIDATE:",
-                        event.candidate.candidate
-                    );
+                    // console.log(
+                    //     "LOCAL ICE CANDIDATE:",
+                    //     event.candidate.candidate
+                    // );
                     const iceCandidate = event.candidate.toJSON();
                     socket.emit("send-ice-candidate-from-caller", { iceCandidate, initializeCall });
                 }
@@ -54,10 +54,10 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
         } else {
             pc.current.onicecandidate = (event) => {
                 if (event.candidate) {
-                    console.log(
-                        "LOCAL ICE CANDIDATE:",
-                        event.candidate.candidate
-                    );
+                    // console.log(
+                    //     "LOCAL ICE CANDIDATE:",
+                    //     event.candidate.candidate
+                    // );
                     const iceCandidate = event.candidate.toJSON();
                     socket.emit("send-ice-candidate-from-receiver", { iceCandidate, initializeCall });
                 }
@@ -70,35 +70,35 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
     }, [initializeCall])
 
     // Checking different stages of connection
-    useEffect(() => {
-        pc.current.onicegatheringstatechange = () => {
-            console.log(
-                "ICE gathering:",
-                pc.current.iceGatheringState
-            );
-        };
+    // useEffect(() => {
+    //     pc.current.onicegatheringstatechange = () => {
+    //         console.log(
+    //             "ICE gathering:",
+    //             pc.current.iceGatheringState
+    //         );
+    //     };
 
-        pc.current.oniceconnectionstatechange = () => {
-            console.log(
-                "ICE connection:",
-                pc.current.iceConnectionState
-            );
-        };
+    //     pc.current.oniceconnectionstatechange = () => {
+    //         console.log(
+    //             "ICE connection:",
+    //             pc.current.iceConnectionState
+    //         );
+        // };
 
-        pc.current.onconnectionstatechange = () => {
-            console.log(
-                "Peer connection:",
-                pc.current.connectionState
-            );
-        };
+        // pc.current.onconnectionstatechange = () => {
+        //     console.log(
+        //         "Peer connection:",
+        //         pc.current.connectionState
+        //     );
+        // };
 
-        pc.current.onsignalingstatechange = () => {
-            console.log(
-                "Signaling:",
-                pc.current.signalingState
-            );
-        };
-    }, [])
+        // pc.current.onsignalingstatechange = () => {
+        //     console.log(
+    //             "Signaling:",
+    //             pc.current.signalingState
+    //         );
+    //     };
+    // }, [])
 
 
     // Caller
@@ -110,7 +110,7 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
                 const offer = await pc.current.createOffer();
                 await pc.current.setLocalDescription(offer);
                 const sdpOffer = pc.current.localDescription;
-                console.log("sending sdp offer");
+                // console.log("sending sdp offer");
                 socket.emit("send-SDP-offer-from-caller", { sdpOffer, initializeCall });
             } catch (error) {
                 console.log(error);
@@ -123,14 +123,14 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
     // listen ICE Candidate 
     useEffect(() => {
         const pathFinder = async ({ iceCandidate }) => {
-            console.log("RECEIVED ICE OBJECT:", iceCandidate);
+            // console.log("RECEIVED ICE OBJECT:", iceCandidate);
             if (!iceCandidate) return;
 
             try {
                 await pc.current.addIceCandidate(
                     new RTCIceCandidate(iceCandidate)
                 );
-                console.log("Remote ICE candidate added");
+                // console.log("Remote ICE candidate added");
 
             } catch (error) {
                 console.error(
@@ -152,7 +152,7 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
             try {
                 const remoteAnswer = new RTCSessionDescription(sdpAnswer);
                 await pc.current.setRemoteDescription(remoteAnswer);
-                console.log("Connection handshake successful");
+                // console.log("Connection handshake successful");
             } catch (error) {
                 console.log("Failed to set remote Description: ", error)
             }
@@ -201,7 +201,7 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
     }
 
     const flipCamera = () => {
-        console.log("executed")
+        // console.log("executed")
         setFacingMode((prevMode) => prevMode == "environment" ? "user" : "environment");
     }
 
@@ -292,8 +292,8 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
 
 
             <div className="video-container">
-                <video ref={callerRef} className="caller-video" autoPlay playsInline muted />
-                <video ref={receiverRef} className="receiver-video" autoPlay playsInline muted />
+                <video ref={callerRef} className="caller-video" autoPlay playsInline />
+                <video ref={receiverRef} className="receiver-video" autoPlay playsInline />
             </div>
             {
                 window.innerWidth <= 630 && callInfoNotNeeded == true ? (
