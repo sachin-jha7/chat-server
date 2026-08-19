@@ -8,8 +8,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
-        // origin: "*",
+        origin: "https://chat-server-70ws.onrender.com",
         credentials: true
     }
 });
@@ -33,8 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    // origin: "*",
+    origin: "https://chat-server-70ws.onrender.com",
     credentials: true
 }));
 app.use(express.json());
@@ -517,6 +515,6 @@ io.on("connection", (socket) => {
 
 
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, () => {
     console.log(`APP IS LIVE AT PORT: ${PORT}`);
 });
