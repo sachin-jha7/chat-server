@@ -330,7 +330,7 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
 
 
             <div className="video-container">
-                <video ref={callerRef} className="caller-video" autoPlay playsInline />
+                <video ref={callerRef} className="caller-video" autoPlay playsInline muted />
                 <video ref={receiverRef} className="receiver-video" autoPlay playsInline />
             </div>
             {
