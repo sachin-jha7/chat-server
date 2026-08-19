@@ -20,7 +20,7 @@ export default function Auth() {
         };
         if(data.email == "" || data.password == "") return;
         try {
-            const res = await fetch('http://localhost:4040/login', {
+            const res = await fetch('https://chat-server-70ws.onrender.com/login', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -48,7 +48,7 @@ export default function Auth() {
         };
         if(data.text == "" || data.email == "" || data.password == "") return;
         try {
-            const res = await fetch('http://localhost:4040/signup', {
+            const res = await fetch('https://chat-server-70ws.onrender.com/signup', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
