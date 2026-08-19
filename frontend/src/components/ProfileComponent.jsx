@@ -17,7 +17,7 @@ export default function ProfileComponent({ currUserData, setCurrUserData }) {
     const { openProfile, setOpenProfile, showProfileComponent } = useContext(DataContext);
 
     const logoutUser = async () => {
-        const res = await fetch("http://localhost:4040/logout", {
+        const res = await fetch("https://chat-server-70ws.onrender.com/logout", {
             credentials: "include"
         });
         const result = await res.json();
@@ -56,7 +56,7 @@ export default function ProfileComponent({ currUserData, setCurrUserData }) {
                 // console.log(blob); // Send this blob to your server backend
                 const formData = new FormData();
                 formData.append("image", blob);
-                const res = await fetch("http://localhost:4040/upload", {
+                const res = await fetch("https://chat-server-70ws.onrender.com/upload", {
                     method: "POST",
                     body: formData,
                     credentials: "include"
