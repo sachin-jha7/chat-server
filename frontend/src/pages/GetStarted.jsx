@@ -18,7 +18,7 @@ export default function GetStarted() {
         setTimeout(() => {
             setAppState("almost");
         }, 30000);
-        const res = await fetch("http://localhost:4040/", {
+        const res = await fetch("https://chat-server-70ws.onrender.com/", {
             credentials: "include"
         });
         const result = await res.json();
@@ -32,7 +32,7 @@ export default function GetStarted() {
     useEffect(() => {
         // fetchData();
         const isDataAvailable = async () => {
-            const res = await fetch("http://localhost:4040/", {
+            const res = await fetch("https://chat-server-70ws.onrender.com/", {
                 credentials: "include"
             });
             const result = await res.json();
