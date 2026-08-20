@@ -58,7 +58,7 @@ export default function Notifiactions({ updateFriendList, currentUserId, socket,
     }, [currUserData]);
     return (
         <div className="notification-div">
-            <h2>Notifiactions
+            <h2>Notifications
                 <button onClick={() => setIsNotifiOpen(false)} className='close-notifi-div'><FontAwesomeIcon icon={faTimes} /></button>
 
             </h2>
