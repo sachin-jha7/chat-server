@@ -67,40 +67,9 @@ export default function VideoCall({ socket, isInComingCall, setIsInComingCall })
         return () => {
             pc.current?.close();
         }
-    }, [initializeCall])
+    }, []);
 
-    // Checking different stages of connection
-    // useEffect(() => {
-    //     pc.current.onicegatheringstatechange = () => {
-    //         console.log(
-    //             "ICE gathering:",
-    //             pc.current.iceGatheringState
-    //         );
-    //     };
-
-    //     pc.current.oniceconnectionstatechange = () => {
-    //         console.log(
-    //             "ICE connection:",
-    //             pc.current.iceConnectionState
-    //         );
-        // };
-
-        // pc.current.onconnectionstatechange = () => {
-        //     console.log(
-        //         "Peer connection:",
-        //         pc.current.connectionState
-        //     );
-        // };
-
-        // pc.current.onsignalingstatechange = () => {
-        //     console.log(
-    //             "Signaling:",
-    //             pc.current.signalingState
-    //         );
-    //     };
-    // }, [])
-
-
+    
     // Caller
     const startVideoCall = async () => {
         
