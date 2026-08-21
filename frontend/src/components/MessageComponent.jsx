@@ -61,6 +61,26 @@ export default function ChatComponent({ currUserData, socket }) {
         }
     }, []);
 
+    useEffect(() => {
+        const isMessageSeen = (joiningTime) => {
+            const currentUserId = currUserData.currentUser;
+            const myMessages = message.filter((message) => message.sender == currentUserId) || [];
+            const lastMessage = myMessages[myMessages.length - 1];
+            if (lastMessage) {
+                const lastMessageTime = (lastMessage.createdAt);
+                if (joiningTime > lastMessageTime) {
+                    setIsSeen(true);
+                } else {
+                    setIsSeen(false);
+                }
+            }
+        }
+        socket.on("receiver-chat-room-joining-time", isMessageSeen);
+        return () => {
+            socket.off("receiver-chat-room-joining-time", isMessageSeen);
+        }
+    }, [message]);
+
     const msgSender = (event, roomName) => {
         event.preventDefault();
         const UserId = currUserData.currentUser;
