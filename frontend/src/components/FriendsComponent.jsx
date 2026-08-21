@@ -38,29 +38,19 @@ export default function FriendsComponent({ currUserData, socket }) {
         socket.emit("join-chat-room", { roomName, UserId, clickedUser });
         currentRoomName.current = roomName;
         setMessage([]);
+        const res = await fetch("http://localhost:4040/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: `${roomName}` }),
+            credentials: "include"
+        });
+        const result = await res.json();
+        currentRoomName.current = roomName;
+        setMessage(result);
         setIsSeen(false);
     }
-
-    useEffect(() => {
-        const getMessages = (result) => {
-            setMessage((prev) => [...prev, ...result]);
-        }
-        socket.on("receive-message", getMessages);
-        return () => {
-            socket.off("receive-message", getMessages);
-        }
-    }, []);
-
-    useEffect(() => {
-        const handleMessageSeen = (data) => {
-            setIsSeen(data);
-        }
-        socket.on("user-message-seen-info", handleMessageSeen);
-        return () => {
-            socket.off("user-message-seen-info", handleMessageSeen);
-        }
-    }, []);
-
 
 
     const startVideoCall = async (event, data) => {
