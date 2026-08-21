@@ -72,27 +72,6 @@ app.get("/", auth.verify, async (req, res) => {
         friendsList: filteredResult
     }
     res.status(200).json(currUserData);
-    // console.log(req.user.id);
-
-    // const token = req.cookies.token;
-    // if (!token) {
-    //     return res.status(400).json("Unauthorized");
-    // }
-
-    // try {
-    //     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //     // req.user = decoded;
-    //     const userId = decoded.id;
-    //     const userDoc = await User.findById(userId);
-    //     // console.log(userDoc);
-    //     const userData = {
-    //         fullName: userDoc.fullName,
-    //         imageUrl: userDoc.imageUrl
-    //     }
-    //     res.status(200).json(userData)
-    // } catch (err) {
-    //     console.log(err);
-    // }
 });
 
 app.post("/search", auth.verify, async (req, res) => {
@@ -145,31 +124,6 @@ app.post("/search", auth.verify, async (req, res) => {
 
     } else {
         const searchedWords = searchedName.toUpperCase();
-        // const currentUserDoc = await User.findById(currentUserId);
-        // console.log(currentUserDoc)
-        // const friendsOfCurrUser = await Friend.find({ friends: currentUserId });
-        // console.log(friendsOfCurrUser)
-        // const searchedUserDoc = await User.find({
-        //     keyWords: searchedWords,
-        //     _id: { $ne: currentUserId }
-        // });
-
-        // 1. Fetch the Friend document for the current user
-        // const userFriendsDoc = await Friend.find({ friends: currentUserId });
-
-        // Extract friend IDs array (or default to empty array if no Friend doc exists)
-        // const friendIds = userFriendsDoc ? userFriendsDoc.friends : [];
-        // console.log(userFriendsDoc)
-        // Combine currentUserId and friendIds into a single exclusion list
-        // const excludeIds = [currentUserId, ...friendIds];
-
-        // 2. Search users excluding yourself and existing friends
-        // const searchedUserDoc = await User.find({
-        // keyWords: searchedWords, // or { $in: searchedWords } depending on your input array
-        // _id: { $nin: excludeIds }
-        // }); 
-        // Returns _id (default), fullName, and imageUrl .select('fullName imageUrl');
-        // console.log(searchedUserDoc)
 
         // 1. Find all relation documents where currentUserId is in the friends array
         const relationDocs = await Friend.find({ friends: currentUserId });
@@ -205,8 +159,8 @@ app.post("/search", auth.verify, async (req, res) => {
 
 app.post("/chat", auth.verify, async (req, res) => {
     const userId = req.user.id;
-    const { roomName } = req.body;
-    const userMessage = await Message.find({ roomName: roomName });
+    const { id } = req.body;
+    const userMessage = await Message.find({ roomName: id });
     res.status(200).json(userMessage);
 });
 
@@ -276,8 +230,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("user-is-typing", (data) => {
-        console.log(data.data._id);
-        console.log(data.roomName);
+        // console.log(data.data._id);
+        // console.log(data.roomName);
         socket.to(data.roomName).emit("user_is_typing", data.data._id);
     })
 
@@ -369,7 +323,7 @@ io.on("connection", (socket) => {
     socket.on("join-chat-room", async (data) => {
         socket.join(data.roomName);
         console.log("user joined Chat-Room: ", data.roomName);
-        const userWhoClickedToJoinRoom = await ChatRoom.findOneAndUpdate({
+        const userWhoClickedToJoinRoom = await ChatRoom.findOneAndUpdate({  // The Sender
             roomName: data.roomName,
             userWhoJoined: data.UserId
         },
@@ -381,27 +335,16 @@ io.on("connection", (socket) => {
                 returnDocument: 'after'
             });
 
-        const allMessages = await Message.find({ roomName: data.roomName });
-        socket.emit("receive-message", allMessages);
-        const clickedUserRoomJoinInfo = await ChatRoom.findOne({
+        
+        const clickedUserRoomJoinInfo = await ChatRoom.findOne({  // The receiver
             $and: [
                 { userWhoJoined: data.clickedUser },
                 { roomName: data.roomName }
             ]
         });
-        const myMessages = allMessages.filter(item => item.sender == data.UserId);
-        const lastMessage = myMessages[myMessages.length - 1];
-        let isLastMsgSeen = false;
-        if (lastMessage && lastMessage.receiver == data.clickedUser) {
-            const joiningTime = new Date(clickedUserRoomJoinInfo?.joiningTime);
-            const messageTime = new Date(lastMessage.createdAt);
-            if (joiningTime > messageTime) {
-                isLastMsgSeen = true;
-            } else {
-                isLastMsgSeen = false;
-            }
-            socket.emit("user-message-seen-info", isLastMsgSeen);
-        }
+        const joiningTime = new Date(clickedUserRoomJoinInfo?.joiningTime);
+        socket.emit("receiver-chat-room-joining-time", joiningTime);
+        
     });
 
     // leave previous chat room
