@@ -38,7 +38,7 @@ export default function FriendsComponent({ currUserData, socket }) {
         socket.emit("join-chat-room", { roomName, UserId, clickedUser });
         currentRoomName.current = roomName;
         setMessage([]);
-        const res = await fetch("http://localhost:4040/chat", {
+        const res = await fetch("https://chat-server-70ws.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
