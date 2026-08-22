@@ -205,7 +205,7 @@ app.get("/logout", auth.logout);
 const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
-    console.log(`A user connected:`, socket.id);
+    // console.log(`A user connected:`, socket.id);
 
     let currUserId = null;
     socket.on("register-user", (currentUser) => {
@@ -215,7 +215,7 @@ io.on("connection", (socket) => {
         onlineUsers.set(currUserId, socket.id);
         socket.join(currentUser);
         io.emit("user-status-changed", Object.fromEntries(onlineUsers));
-        console.log("user joined room", currentUser)
+        // console.log("user joined room", currentUser)
     });
 
     socket.on("disconnect", () => {
@@ -322,7 +322,7 @@ io.on("connection", (socket) => {
     // when a chat is selected
     socket.on("join-chat-room", async (data) => {
         socket.join(data.roomName);
-        console.log("user joined Chat-Room: ", data.roomName);
+        // console.log("user joined Chat-Room: ", data.roomName);
         const userWhoClickedToJoinRoom = await ChatRoom.findOneAndUpdate({  // The Sender
             roomName: data.roomName,
             userWhoJoined: data.UserId
@@ -403,7 +403,7 @@ io.on("connection", (socket) => {
     // Video Call
 
     socket.on("start-video-call", (data) => {
-        console.log(`start video call ${data.data._id}`)
+        // console.log(`start video call ${data.data._id}`)
         socket.to(data.data._id).emit("listen-video-call", data);
     })
 
@@ -437,11 +437,11 @@ io.on("connection", (socket) => {
 
     socket.on("end-the-call", (data) => {
         if (data.caller == true) {
-            console.log("Caller ends the call")
+            // console.log("Caller ends the call")
             const receiverId = data.data._id;
             socket.to(receiverId).emit("call-ends", data);
         } else {
-            console.log("Receiver ends the call");
+            // console.log("Receiver ends the call");
             const callerId = data.callerUserId;
             socket.to(callerId).emit("call-ends", data);
         }
