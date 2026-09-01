@@ -48,7 +48,7 @@ const signup = async (req, res) => {
     const token = generateToken(newUser._id);
     res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "none",
         partitioned: true,
         path: "/",
@@ -82,7 +82,7 @@ const login = async (req, res) => {
     const token = generateToken(userExists._id);
     res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "none",
         partitioned: true,
         path: "/",
@@ -98,7 +98,7 @@ const login = async (req, res) => {
 const logout = (req, res) => {
     res.clearCookie("token",{
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "none",
         partitioned: true,
         path: "/"
